@@ -1,9 +1,77 @@
 ﻿#Requires AutoHotkey v2.0
 
 #SingleInstance Force
+LangSwItemName := "Change keyboard language after activating the tool?"
+StartupItemName := "Activate Script on startup?"
+
+A_TrayMenu.Add()  ; Creates a separator line.
+A_TrayMenu.Add(LangSwItemName, LangSwMenuHandler)
+A_TrayMenu.Add(StartupItemName, StartupMenuHandler)
+Persistent
+
+; ====== match all variables to ini file if available, if not - create an ini file ========
+
+if (FileExist("Keyboard.LanguageFixer.EN.HE.ini")) {
+	LangChangeCurrStt := IniRead(A_ScriptDir "\Keyboard.LanguageFixer.EN.HE.ini", "Settings", "ChangeLanguageAfterTrigger")
+	ActiveOnStartCurrStt := IniRead(A_ScriptDir	"\Keyboard.LanguageFixer.EN.HE.ini", "Settings", "ActiveOnAfterTrigger")
+	
+	If (LangChangeCurrStt) {
+		A_TrayMenu.Check(LangSwItemName)
+	} Else {
+		A_TrayMenu.UnCheck(LangSwItemName)
+	}
+	
+	If (ActiveOnStartCurrStt) {
+		A_TrayMenu.Check(StartupItemName)
+	} Else {
+		A_TrayMenu.UnCheck(StartupItemName)
+	}
+	; MsgBox LangChangeCurrStt 
+	
+} Else {
+	FileAppend "[Settings]`n", "Keyboard.LanguageFixer.EN.HE.ini", "UTF-16-RAW"
+	IniWrite("1", "Keyboard.LanguageFixer.EN.HE.ini", "Settings", "ChangeLanguageAfterTrigger")
+	IniWrite("0", "Keyboard.LanguageFixer.EN.HE.ini", "Settings", "ActiveOnStartup")
+	LangChangeCurrStt := "1"
+	ActiveOnStartCurrStt := "0"
+	A_TrayMenu.Check(LangSwItemName)
+	A_TrayMenu.UnCheck(StartupItemName)
+}
 
 
-; ============= Keyboard Fix =============
+; ========= Tray Menu ===================
+
+LangSwMenuHandler(langItemName, langpos , langMyMenu) {
+	global
+	langMyMenu.ToggleCheck(langItemName)
+	; MsgBox LangChangeCurrStt
+	LangChangePrevStt := LangChangeCurrStt
+	LangChangeCurrStt := !LangChangePrevStt
+	IniWrite(LangChangeCurrStt, "Keyboard.LanguageFixer.EN.HE.ini", "Settings", "ChangeLanguageAfterTrigger")
+}
+
+StartupMenuHandler(startupItemName, startpos , startupMyMenu) {
+	global
+	startupMyMenu.ToggleCheck(startupItemName)
+	; MsgBox ActiveOnStartCurrStt
+	ActiveOnStartPrevStt := ActiveOnStartCurrStt
+	ActiveOnStartCurrStt := !ActiveOnStartPrevStt
+	IniWrite(LangChangeCurrStt, "Keyboard.LanguageFixer.EN.HE.ini", "Settings", "ActiveOnStartup")
+	
+	If (A_IsCompiled) {
+		ShortcutName := StrReplace(A_ScriptName, ".exe", ".lnk")
+	} Else If (!A_IsCompiled) {
+		ShortcutName := StrReplace(A_ScriptName, ".ahk", ".lnk")
+	}
+	
+	If (ActiveOnStartCurrStt) {
+		FileCreateShortcut A_ScriptDir "\" A_ScriptName , A_AppData "\Microsoft\Windows\Start Menu\Programs\Startup\"  ShortcutName
+	} else {
+		FileDelete A_AppData "\Microsoft\Windows\Start Menu\Programs\Startup\"  ShortcutName
+	}
+
+}
+
 
 ; ==== Set Map ====
 
@@ -102,7 +170,9 @@ KybrdtbleEnHe["`/"] := "`."
 
 KeybordReplace(){
 	; Store clipboard
-	FileDelete "Company Logo.clip"
+	If (FileExist("Company Logo.clip")) {
+		FileDelete "Company Logo.clip"
+	}
 	FileAppend ClipboardAll(), "Company Logo.clip"
 	
 	SendInput "^x"
@@ -152,6 +222,16 @@ KeybordReplace(){
 		}
 	}
 	
+	; MsgBox LangChangeCurrStt
+	
+	if (IniRead("Keyboard.LanguageFixer.EN.HE.ini", "Settings", "ChangeLanguageAfterTrigger")) {
+		Sleep 10
+		SendInput "{Shift down}"
+		Sleep 10
+		SendInput "{alt}"
+		Sleep 10
+		SendInput "{Shift up}"
+	}
 	
 	TxtToRep := ""
 	LetInArr := ""
@@ -161,11 +241,3 @@ KeybordReplace(){
 	ClipData := FileRead("Company Logo.clip", "RAW")  ; In this case, FileRead returns a Buffer.
 	A_Clipboard := ClipboardAll(ClipData)  ; Convert the Buffer to a ClipboardAll and assign it.
 }
-
-
-; ============ Screen Flipping ===========
- 
-^!Up:: Run '"C:\Program Files\display\display64.exe" /rotate 0' , , "Hide"
-^!Down:: Run '"C:\Program Files\display\display64.exe" /rotate 180' , , "Hide"
-^!Left:: Run '"C:\Program Files\display\display64.exe" /rotate 90' , , "Hide"
-^!Right:: Run '"C:\Program Files\display\display64.exe" /rotate 270' , , "Hide"
