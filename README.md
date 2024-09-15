@@ -1,5 +1,5 @@
 # Hebrew-English-language-switcher
-While this repo starts with this script, there will hopefully be others!
+While this repo starts with only this script, there will hopefully be others!
 
 ![alt text](screen-rec.gif)
 
