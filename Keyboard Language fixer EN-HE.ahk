@@ -11,9 +11,10 @@ Persistent
 
 ; ====== match all variables to ini file if available, if not - create an ini file ========
 
+
 if (FileExist("Keyboard.LanguageFixer.EN.HE.ini")) {
 	LangChangeCurrStt := IniRead(A_ScriptDir "\Keyboard.LanguageFixer.EN.HE.ini", "Settings", "ChangeLanguageAfterTrigger")
-	ActiveOnStartCurrStt := IniRead(A_ScriptDir	"\Keyboard.LanguageFixer.EN.HE.ini", "Settings", "ActiveOnAfterTrigger")
+	ActiveOnStartCurrStt := IniRead(A_ScriptDir	"\Keyboard.LanguageFixer.EN.HE.ini", "Settings", "ActiveOnStartup")
 	
 	If (LangChangeCurrStt) {
 		A_TrayMenu.Check(LangSwItemName)
@@ -82,7 +83,21 @@ Kybrdtble.CaseSense := 1
 
 Kybrdtble["`t"] := "`t"
 Kybrdtble["`n"] := "`n"
+Kybrdtble["!"] := "!"
+Kybrdtble["+"] := "`+"
+Kybrdtble["="] := "="
+Kybrdtble["1"] := "1"
+Kybrdtble["2"] := "2"
+Kybrdtble["3"] := "3"
+Kybrdtble["4"] := "4"
+Kybrdtble["5"] := "5"
+Kybrdtble["6"] := "6"
+Kybrdtble["7"] := "7"
+Kybrdtble["8"] := "8"
+Kybrdtble["9"] := "9"
+Kybrdtble["@"] := "@"
 Kybrdtble["-"] := "-"
+Kybrdtble["?"] := "?"
 Kybrdtble[" "] := " "
 Kybrdtble["q"] := "/"
 Kybrdtble["w"] := "'"
@@ -112,9 +127,35 @@ Kybrdtble["b"] := "נ"
 Kybrdtble["n"] := "מ"
 Kybrdtble["m"] := "צ"
 
+Kybrdtble["Q"] := "Q"
+Kybrdtble["W"] := "W"
+Kybrdtble["E"] := "E"
+Kybrdtble["R"] := "R"
+Kybrdtble["T"] := "T"
+Kybrdtble["Y"] := "Y"
+Kybrdtble["U"] := "U"
+Kybrdtble["I"] := "I"
+Kybrdtble["O"] := "O"
+Kybrdtble["P"] := "P"
+Kybrdtble["A"] := "A"
+Kybrdtble["S"] := "S"
+Kybrdtble["D"] := "D"
+Kybrdtble["F"] := "F"
+Kybrdtble["G"] := "G"
+Kybrdtble["H"] := "H"
+Kybrdtble["J"] := "J"
+Kybrdtble["K"] := "K"
+Kybrdtble["L"] := "L"
+Kybrdtble["Z"] := "Z"
+Kybrdtble["X"] := "X"
+Kybrdtble["C"] := "C"
+Kybrdtble["V"] := "V"
+Kybrdtble["B"] := "B"
+Kybrdtble["N"] := "N"
+Kybrdtble["M"] := "M"
+
 ; Kybrdtble.Default := "`&"
 Kybrdtble['"'] := '"'
-
 
 
 ; = Hebrew to English =
@@ -191,7 +232,7 @@ KeybordReplace(){
 			; MsgBox "not Caught"
 		} Catch {
 			; MsgBox "Caught!"
-			If (InStr(CopiedTxtToRep, "t") or InStr(CopiedTxtToRep, "v") or InStr(CopiedTxtToRep, "u") or InStr(CopiedTxtToRep, "h") or InStr(CopiedTxtToRep, "r")) {
+			If (InStr(CopiedTxtToRep, "t", 1) or InStr(CopiedTxtToRep, "v", 1) or InStr(CopiedTxtToRep, "u", 1) or InStr(CopiedTxtToRep, "h", 1) or InStr(CopiedTxtToRep, "r", 1)) {
 				CorLetStor := KybrdtbleEnHe.Get(LetInArr)
 				; MsgBox "EN-HE Edge cases Activated"
 			} Else If (InStr(CopiedTxtToRep, "ש") or InStr(CopiedTxtToRep, "ק") or InStr(CopiedTxtToRep, "ן") or InStr(CopiedTxtToRep, "ם") or InStr(CopiedTxtToRep, "ו")) {
