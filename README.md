@@ -7,10 +7,16 @@ While this repo starts with only this script, there will hopefully be others!
 This script is to solve one specific problem with multi-Language keyboards: Starting to type something in one language and realising your keyboard is set to the wrong language.
 Simply Select the text that is written in the wrong language, and the the hotkey Ctrl+Alt+Q to activate the script, it will replace any hebrew with the coresponding english, and english with the coresponding hebrew. 
 
-### Usage
-can be simply run with [Autohotkey](https://www.autohotkey.com/v2/), compiled with [AHK2EXE](https://github.com/AutoHotkey/Ahk2Exe) or run directly from the compiled version in the releases section (it too, is compiled with ahk2exe).
+## Usage
+Can be simply run with [Autohotkey](https://www.autohotkey.com/v2/), compiled with [AHK2EXE](https://github.com/AutoHotkey/Ahk2Exe) or run directly from the compiled version in the releases section (it too, is compiled with ahk2exe).
 
-## V1.0.3: Bug fixes
+Settings are available here:
+![Screenshot 2024-09-18 180901](https://github.com/user-attachments/assets/a1b7953c-123b-4632-aafd-bd03e75c2d7b)
+
+## V1.0.4: Bug fixes
+Issues surrounding changing keyboard language when the script is triggered fixed. Capital letters and any characters unrelated to Hebrew or English keyboards will be simply passed through.
+
+### V1.0.3: Bug fixes
 This version fixes numbers and capital letters, along with the bug fixes commited in v1.0.2.
 
 ### V1.0.1: Added new feature!
