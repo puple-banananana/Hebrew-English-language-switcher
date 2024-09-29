@@ -239,6 +239,7 @@ KeybordReplace(){
 	
 	if (LangChangeCurrStt) {
 		Sleep 150 + (20*DelayBeforeLangSW)
+		KeyWait "Control"
 		SendInput "{Shift down}"
 		Sleep 10
 		SendInput "{alt}"
