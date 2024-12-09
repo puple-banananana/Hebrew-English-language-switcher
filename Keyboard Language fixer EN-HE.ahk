@@ -166,12 +166,22 @@ StartupMenuHandler(startupItemName, startpos , startupMyMenu) {
 
 ^!q:: KeybordReplace()
 
+ClipSave() {
+	If (FileExist("Stored.clip")) {
+		FileDelete "Stored.clip"
+	}
+	FileAppend ClipboardAll(), "Stored.clip"
+}
+
+ClipRestore() {
+	ClipData := FileRead("Stored.clip", "RAW")  ; In this case, FileRead returns a Buffer.
+	A_Clipboard := ClipboardAll(ClipData)
+}
+
 KeybordReplace(){
 	; Store clipboard
-	If (FileExist("Company Logo.clip")) {
-		FileDelete "Company Logo.clip"
-	}
-	FileAppend ClipboardAll(), "Company Logo.clip"
+	ClipSave()
+	
 	
 	DelayBeforeLangSW := 1
 	TxtToRep := ""
@@ -191,7 +201,22 @@ KeybordReplace(){
 	}
 	
 	TxtToRep := StrSplit(CopiedTxtToRep)
-
+	
+	If (TxtToRep.Length >= "1000") {
+		continuewithlonginput := MsgBox("Input over 1000 charachters, continue anyway? (results will be unstable!)", "Warning", "YesNo")
+		If (continuewithlonginput = "Yes") {
+			Goto ReplaceAndPaste
+		} Else If (continuewithlonginput = "No"){
+			;MsgBox A_Clipboard
+			SendInput "^v"
+			Sleep 200
+			ClipRestore()
+			;MsgBox A_Clipboard
+			Exit
+		}
+	}
+	
+	ReplaceAndPaste:
 	For LetInArr in TxtToRep {
 		; MsgBox LetInArr
 		
@@ -210,6 +235,8 @@ KeybordReplace(){
 				} Else { 
 					MsgBox "While problematic charachters where used, no vowels were used, Hampering Identification. `nPlease add a vowel in English or Hebrew (while your keyboard is set to the incorrect language) to run successfully"
 					SendInput "^v"
+					Sleep 20
+					ClipRestore()
 					Exit
 				}
 			} Catch {
@@ -237,16 +264,21 @@ KeybordReplace(){
 	
 	; MsgBox LangChangeCurrStt
 	
+	
+	
 	if (LangChangeCurrStt) {
-		Sleep 150 + (20*DelayBeforeLangSW)
+		Sleep 250 + (22*DelayBeforeLangSW)
 		KeyWait "Control"
+		KeyWait "Alt"
 		SendInput "{Shift down}"
 		Sleep 10
 		SendInput "{alt}"
 		Sleep 10
 		SendInput "{Shift up}"
+		SendInput "{alt up}"
+		
+
 	}
 	
-	ClipData := FileRead("Company Logo.clip", "RAW")  ; In this case, FileRead returns a Buffer.
-	A_Clipboard := ClipboardAll(ClipData)  ; Convert the Buffer to a ClipboardAll and assign it.
+	ClipRestore()
 }
