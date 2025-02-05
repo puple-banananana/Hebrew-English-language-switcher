@@ -174,6 +174,7 @@ ClipSave() {
 }
 
 ClipRestore() {
+	A_Clipboard := ""
 	ClipData := FileRead("Stored.clip", "RAW")  ; In this case, FileRead returns a Buffer.
 	A_Clipboard := ClipboardAll(ClipData)
 }
